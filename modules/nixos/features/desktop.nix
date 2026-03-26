@@ -24,18 +24,25 @@
       monospace = ["JetBrainsMono Nerd Font Mono"];
     };
 
+    fonts.fontconfig.antialias = true;
+    fonts.fontconfig.hinting.enable = true;
+
     i18n.defaultLocale = "en_US.UTF-8";
 
     services.upower.enable = true;
 
     security.polkit.enable = true;
 
+    services.logind.powerKeyLongPress = "hibernate";
+    services.logind.lidSwitch = "suspend";
+    services.logind.lidSwitchDocked = "ignore";
+
     hardware = {
       enableAllFirmware = true;
 
-      opengl = {
+      graphics = {
         enable = true;
-        driSupport32Bit = true;
+        enable32Bit = true;
       };
     };
   };

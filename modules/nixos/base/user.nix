@@ -5,6 +5,11 @@
         type = lib.types.str;
         default = "yurii";
       };
+
+      autostart = lib.mkOption {
+        type = lib.types.listOf (lib.types.either lib.types.str lib.types.package);
+        default = [];
+      };
     };
   };
 }
