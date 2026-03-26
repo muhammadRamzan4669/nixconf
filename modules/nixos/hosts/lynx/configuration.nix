@@ -20,7 +20,6 @@
       self.nixosModules.desktop
       self.nixosModules.pipewire
       self.nixosModules.nix
-      self.nixosModules.wallpaper
       self.nixosModules.extra_hjem
     ];
 
@@ -75,22 +74,6 @@
       config.common.default = ["wlr"];
     };
 
-    environment.systemPackages = with pkgs; [
-      niri
-      kitty
-      brave
-      xwayland-satellite
-      swaybg
-      tofi
-      hyprpicker
-      brightnessctl
-      playerctl
-      pipewire
-      wireplumber
-      nerd-fonts.jetbrains-mono
-      btop
-    ];
-
     hjem.users.lynx = {
       enable = true;
       directory = "/home/lynx";
@@ -99,16 +82,15 @@
       files.".config/kitty/kitty.conf".source = ./kitty.conf;
     };
 
-    fonts.packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
+    environment.systemPackages = with pkgs; [
+      niri
+      pipewire
+      wireplumber
     ];
 
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
     };
-
-    nixpkgs.config.allowUnfree = true;
-    nix.settings.experimental-features = ["nix-command" "flakes"];
 
     system.stateVersion = "25.05";
   };
