@@ -1,0 +1,11 @@
+// Niri configuration
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+        }
+    }
+}
+
+layout "dwindle" {}

@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.hostLynx = {
+  flake.nixosModules.hardwareLynx = {
     config,
     lib,
     pkgs,

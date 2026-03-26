@@ -21,6 +21,7 @@
       self.nixosModules.pipewire
       self.nixosModules.nix
       self.nixosModules.extra_hjem
+      self.nixosModules.hardwareLynx
     ];
 
     boot = {
@@ -78,8 +79,8 @@
       enable = true;
       directory = "/home/lynx";
       user = "lynx";
-      files.".config/niri/config.kdl".source = ./niri-config.kdl;
-      files.".config/kitty/kitty.conf".source = ./kitty.conf;
+      files.".config/niri/config.kdl".source = ./lynx/niri-config.kdl;
+      files.".config/kitty/kitty.conf".source = ./lynx/kitty.conf;
     };
 
     environment.systemPackages = with pkgs; [
