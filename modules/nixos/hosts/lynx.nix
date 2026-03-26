@@ -4,6 +4,7 @@
   ...
 }: {
   flake.nixosConfigurations.lynx = inputs.nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
     modules = [
       self.nixosModules.hostLynx
       self.nixosModules.hardwareLynx
@@ -13,6 +14,7 @@
   flake.nixosModules.hostLynx = {
     pkgs,
     config,
+    lib,
     ...
   }: {
     imports = [
@@ -25,6 +27,7 @@
       self.nixosModules.network
       self.nixosModules.security
       self.nixosModules.logging
+      self.nixosModules.filesystem
     ];
 
     boot = {
@@ -51,7 +54,14 @@
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri;
 
-    services.getty.autologinUser = "lynx";
+    services.getty.autologinUser = lib.mkDefault "lynx";
+
+    warnings = lib.optional (config.services.getty.autologinUser != null) ''
+      WARNING: Auto-login is enabled for user '${config.services.getty.autologinUser}'.
+      This provides NO authentication security. Anyone with physical access can use this system.
+      This is suitable ONLY for single-user systems in physically secure locations.
+      To disable auto-login, set: services.getty.autologinUser = lib.mkForce null;
+    '';
 
     environment.loginShellInit = ''
       if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
@@ -107,27 +117,24 @@
   }: {
     imports = [
       (modulesPath + "/installer/scan/not-detected.nix")
+      self.nixosModules.hardware-detection
     ];
-
-    boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
-    boot.initrd.kernelModules = [];
-    boot.kernelModules = ["kvm-intel"];
-    boot.extraModulePackages = [];
 
     fileSystems."/" = {
       device = "/dev/disk/by-label/nixos";
       fsType = "ext4";
+      options = ["defaults" "noatime"];
     };
 
     fileSystems."/boot" = {
       device = "/dev/disk/by-label/boot";
       fsType = "vfat";
+      options = ["defaults" "noatime"];
     };
 
     swapDevices = [];
 
     networking.useDHCP = lib.mkDefault true;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
 }

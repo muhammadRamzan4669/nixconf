@@ -2,18 +2,14 @@
   flake.nixosModules.general = {
     pkgs,
     config,
+    lib,
     ...
   }: {
     users.users.lynx = {
       isNormalUser = true;
       description = "lynx";
       extraGroups = ["wheel" "video" "audio" "input"];
-      initialHashedPassword = "";
-    };
-
-    security.sudo = {
-      enable = true;
-      wheelNeedsPassword = false;
+      initialHashedPassword = lib.mkDefault "";
     };
 
     boot.tmp.cleanOnBoot = true;
