@@ -5,7 +5,7 @@
     pkgs,
     ...
   }: {
-    boot.initrd.availableKernelModules = [
+    boot.initrd.availableKernelModules = lib.mkDefault [
       "xhci_pci"
       "ehci_pci"
       "ahci"
@@ -17,6 +17,9 @@
       "rtsx_pci_sdmmc"
       "mmc_block"
       "uas"
+      "virtio_pci"
+      "virtio_blk"
+      "virtio_scsi"
     ];
 
     boot.kernelModules = lib.mkDefault [
@@ -29,7 +32,7 @@
     hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-    powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+    boot.initrd.systemd.enable = lib.mkDefault true;
 
     services.fwupd.enable = lib.mkDefault true;
 

@@ -21,6 +21,17 @@
       options = "--delete-older-than 7d";
     };
 
-    nix.settings.auto-optimise-store = true;
+    nix.settings = {
+      auto-optimise-store = true;
+      warn-dirty = false;
+      keep-outputs = false;
+      keep-derivations = false;
+      max-jobs = "auto";
+    };
+
+    nix.optimise = {
+      automatic = true;
+      dates = ["weekly"];
+    };
   };
 }

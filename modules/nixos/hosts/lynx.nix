@@ -5,6 +5,9 @@
 }: {
   flake.nixosConfigurations.lynx = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
+    specialArgs = {
+      inherit inputs self;
+    };
     modules = [
       self.nixosModules.hostLynx
       self.nixosModules.hardwareLynx
@@ -26,8 +29,10 @@
       self.nixosModules.extra_hjem
       self.nixosModules.network
       self.nixosModules.security
+      self.nixosModules.systemd-hardening
       self.nixosModules.logging
       self.nixosModules.filesystem
+      self.nixosModules.performance
     ];
 
     boot = {

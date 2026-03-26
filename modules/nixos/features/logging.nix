@@ -1,5 +1,5 @@
 {...}: {
-  flake.nixosModules.logging = {...}: {
+  flake.nixosModules.logging = {lib, ...}: {
     services.journald.extraConfig = ''
       SystemMaxUse=500M
       SystemKeepFree=1G
@@ -30,7 +30,10 @@
     '';
 
     boot.kernel.sysctl = {
-      "kernel.core_pattern" = "|/bin/false";
+      "kernel.core_pattern" = lib.mkDefault "|/bin/false";
     };
+
+    services.journald.rateLimitInterval = "30s";
+    services.journald.rateLimitBurst = 10000;
   };
 }
