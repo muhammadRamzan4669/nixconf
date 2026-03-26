@@ -1,14 +1,7 @@
 {
-  flake.nixosModules.wallpaper = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.wallpaper = {pkgs, ...}: {
     preferences.autostart = [
-      ''
-        ${pkgs.swww}/bin/swww-daemon &
-        ${lib.getExe pkgs.swww} img ${./gruvbox-mountain-village.png} &
-      ''
+      ''${pkgs.swaybg}/bin/swaybg -i $HOME/wallpaper.png &''
     ];
   };
 }

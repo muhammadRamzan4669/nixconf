@@ -16,6 +16,11 @@
   }: {
     imports = [
       self.nixosModules.base
+      self.nixosModules.general
+      self.nixosModules.desktop
+      self.nixosModules.pipewire
+      self.nixosModules.nix
+      self.nixosModules.wallpaper
       self.nixosModules.extra_hjem
     ];
 
@@ -27,27 +32,13 @@
 
     networking = {
       hostName = "lynx";
-      wireless.enable = true;
-      wireless.userControlled.enable = true;
+      useDHCP = true;
+      interfaces = {};
     };
 
     time.timeZone = "Asia/Karachi";
 
-    users.users.lynx = {
-      isNormalUser = true;
-      description = "lynx";
-      extraGroups = ["wheel" "video" "audio" "input"];
-      initialPassword = "12345";
-    };
-
     security.rtkit.enable = true;
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      jack.enable = true;
-    };
 
     hardware.bluetooth.enable = true;
     hardware.bluetooth.powerOnBoot = true;
@@ -97,7 +88,6 @@
       pipewire
       wireplumber
       nerd-fonts.jetbrains-mono
-      wpa_supplicant_gui
       btop
     ];
 

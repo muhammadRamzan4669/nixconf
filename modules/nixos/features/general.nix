@@ -4,39 +4,11 @@
     config,
     ...
   }: {
-    imports = [
-      self.nixosModules.extra_hjem
-      self.nixosModules.gtk
-      self.nixosModules.nix
-    ];
-
-    users.users.${config.preferences.user.name} = {
+    users.users.lynx = {
       isNormalUser = true;
-      description = "${config.preferences.user.name}'s account";
-      extraGroups = ["wheel" "networkmanager"];
-      shell = self.packages.${pkgs.system}.environment;
-
-      hashedPasswordFile = "/persist/passwd";
+      description = "lynx";
+      extraGroups = ["wheel" "video" "audio" "input"];
       initialPassword = "12345";
     };
-
-    persistance.data.directories = [
-      "nixconf"
-
-      "Videos"
-      "Documents"
-      "Projects"
-
-      ".ssh"
-    ];
-
-    # todo: remove
-    persistance.cache.directories = [
-      ".local/share/zoxide"
-      ".local/share/direnv"
-      ".local/share/nvim"
-      ".local/share/fish"
-      ".config/nvim"
-    ];
   };
 }
