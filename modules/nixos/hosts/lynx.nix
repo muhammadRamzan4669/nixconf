@@ -22,6 +22,9 @@
       self.nixosModules.pipewire
       self.nixosModules.nix
       self.nixosModules.extra_hjem
+      self.nixosModules.network
+      self.nixosModules.security
+      self.nixosModules.logging
     ];
 
     boot = {
@@ -44,7 +47,6 @@
     hardware.bluetooth.powerOnBoot = true;
     services.blueman.enable = true;
 
-    services.timesyncd.enable = true;
 
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri;
@@ -93,7 +95,7 @@
       NIXOS_OZONE_WL = "1";
     };
 
-    system.stateVersion = "25.05";
+    system.stateVersion = "24.11";
   };
 
   flake.nixosModules.hardwareLynx = {
@@ -109,7 +111,7 @@
 
     boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
     boot.initrd.kernelModules = [];
-    boot.kernelModules = ["kvm-intel" "kvm-amd"];
+    boot.kernelModules = ["kvm-intel"];
     boot.extraModulePackages = [];
 
     fileSystems."/" = {
@@ -127,6 +129,5 @@
     networking.useDHCP = lib.mkDefault true;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
 }

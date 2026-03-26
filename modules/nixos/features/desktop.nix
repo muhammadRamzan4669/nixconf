@@ -1,8 +1,5 @@
 {self, ...}: {
   flake.nixosModules.desktop = {pkgs, ...}: {
-    imports = [
-      self.nixosModules.wallpaper
-    ];
 
     environment.systemPackages = with pkgs; [
       kitty
