@@ -6,6 +6,7 @@
   flake.nixosConfigurations.lynx = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       self.nixosModules.hostLynx
+      self.nixosModules.hardwareLynx
     ];
   };
 
@@ -21,7 +22,6 @@
       self.nixosModules.pipewire
       self.nixosModules.nix
       self.nixosModules.extra_hjem
-      self.nixosModules.hardwareLynx
     ];
 
     boot = {
@@ -94,5 +94,39 @@
     };
 
     system.stateVersion = "25.05";
+  };
+
+  flake.nixosModules.hardwareLynx = {
+    config,
+    lib,
+    pkgs,
+    modulesPath,
+    ...
+  }: {
+    imports = [
+      (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+    boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
+    boot.initrd.kernelModules = [];
+    boot.kernelModules = ["kvm-intel" "kvm-amd"];
+    boot.extraModulePackages = [];
+
+    fileSystems."/" = {
+      device = "/dev/disk/by-label/nixos";
+      fsType = "ext4";
+    };
+
+    fileSystems."/boot" = {
+      device = "/dev/disk/by-label/boot";
+      fsType = "vfat";
+    };
+
+    swapDevices = [];
+
+    networking.useDHCP = lib.mkDefault true;
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };
 }

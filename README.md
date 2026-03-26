@@ -21,40 +21,34 @@ Minimal NixOS configuration for user "lynx" using the Goxore nixconf structure.
 ```
 modules/
 ├── flake-parts.nix
-├── theme.nix
 ├── nixos/
 │   ├── base/                    # Base options
-│   │   ├── start.nix
-│   │   └── user.nix
+│   │   └── base.nix
 │   ├── features/                # Feature modules
 │   │   ├── general.nix
 │   │   ├── desktop.nix
 │   │   ├── nix.nix
 │   │   ├── pipewire.nix
-│   │   └── wallpaper/
-│   │       └── wallpaper.nix
+│   │   └── wallpaper.nix
 │   ├── extra/                   # Optional extras
-│   │   └── hjem/
-│   │       └── hjem.nix
+│   │   └── hjem.nix
 │   └── hosts/                   # Host-specific configs
-│       └── lynx/
-│           ├── configuration.nix
-│           ├── hardware-configuration.nix
+│       ├── lynx.nix             # Main host configuration
+│       └── lynx/                # Host-specific files
 │           ├── niri-config.kdl
 │           └── kitty.conf
-└── wrappedPrograms/             # Application wrappers
 ```
 
 ## Installation
 
-1. Update `modules/nixos/hosts/lynx/hardware-configuration.nix` with your hardware
+1. Update hardware configuration in `modules/nixos/hosts/lynx.nix` (the `hardwareLynx` module) with your hardware details
 
-2. Copy wallpaper to home:
+2. Build and switch:
 ```bash
-cp your-wallpaper.png /home/lynx/wallpaper.png
+sudo nixos-rebuild switch --flake .#lynx
 ```
 
-3. Build and install:
+For initial installation:
 ```bash
 sudo nixos-install --flake .#lynx
 ```
@@ -67,6 +61,11 @@ sudo nixos-install --flake .#lynx
 
 ## Module Organization
 
-Each module in `features/` exports a `flake.nixosModules.<name>` that can be imported into host configurations. The base modules in `base/` define core options.
+This configuration uses `import-tree` to automatically load all `.nix` files in the `modules/` directory. Each module exports `flake.nixosModules.<name>` that can be imported into host configurations.
 
-The `lynx` host in `modules/nixos/hosts/lynx/configuration.nix` imports all necessary modules and defines host-specific settings.
+- **Base modules** (`base/`): Define core options and user preferences
+- **Feature modules** (`features/`): Self-contained functionality (desktop, audio, networking, etc.)
+- **Extra modules** (`extra/`): Optional enhancements like hjem for home file management
+- **Host modules** (`hosts/`): Host-specific configurations combining feature modules
+
+The `lynx` host configuration in `modules/nixos/hosts/lynx.nix` imports all necessary modules and defines host-specific settings. This structure avoids circular dependencies and follows NixOS best practices.
